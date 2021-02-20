@@ -1,6 +1,13 @@
 $(document).ready(function(){
-    $('#imageFile').change(function(event){
+    $('#primaryImage').change(function(event){
         var filePath = URL.createObjectURL(event.target.files[0]);
-        $('#thumbnail').attr("src", filePath);
+        $('#mainThumbnail').attr("src", filePath);
+    });
+
+    $("input[name='extraImage']").each(function(index) {
+        $(this).change(function(event){
+            var filePath = URL.createObjectURL(event.target.files[0]);
+            $('#thumbnail' + index).attr("src", filePath);
+        });
     });
 });

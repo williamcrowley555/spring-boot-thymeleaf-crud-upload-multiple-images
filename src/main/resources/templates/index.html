@@ -44,7 +44,7 @@
                     <td th:text="${employee.lastName}"></td>
                     <td th:text="${employee.email}"></td>
                     <td class="text-center">
-                        <img th:src="@{${employee.imagePath}}" width="80"/>
+                        <img th:src="@{${employee.mainImagePath}}" width="80"/>
                     </td>
                     <td class="text-center">
                         <a th:href="@{/showFormForUpdate/{id}(id = ${employee.id})}" class="btn btn-primary">Update</a>

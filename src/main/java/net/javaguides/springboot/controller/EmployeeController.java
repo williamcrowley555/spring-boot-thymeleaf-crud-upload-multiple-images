@@ -2,6 +2,7 @@ package net.javaguides.springboot.controller;
 
 import net.javaguides.springboot.model.Employee;
 import net.javaguides.springboot.service.IEmployeeService;
+import net.javaguides.springboot.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -39,25 +40,43 @@ public class EmployeeController {
 
     @PostMapping("/saveEmloyee")
     public String saveEmloyee(@ModelAttribute("employee") Employee employee,
-                              @RequestParam("imageFile") MultipartFile multipartFile) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        employee.setImage(fileName);
+                              @RequestParam("primaryImage") MultipartFile mainMultipartFile,
+                              @RequestParam("extraImage") MultipartFile[] extraMultipartFiles) throws IOException {
+        String mainImageName = StringUtils.cleanPath(mainMultipartFile.getOriginalFilename());
+        employee.setMainImage(mainImageName.isEmpty() ? null : mainImageName);
+
+        int i = 0;
+        for(MultipartFile extraMultipartFile : extraMultipartFiles) {
+            String extraImageName = StringUtils.cleanPath(extraMultipartFile.getOriginalFilename());
+            switch (i) {
+                case 0:
+                    employee.setExtraImage1(extraImageName.isEmpty() ? null : extraImageName);
+                    break;
+                case 1:
+                    employee.setExtraImage2(extraImageName.isEmpty() ? null : extraImageName);
+                    break;
+                case 2:
+                    employee.setExtraImage3(extraImageName.isEmpty() ? null : extraImageName);
+                    break;
+                default:
+                    break;
+            }
+            ++ i;
+        }
 
         Employee savedEmployee = employeeService.save(employee);
+
         String uploadDir = "./images/employee-images/" + savedEmployee.getId();
-        Path uploadPath = Paths.get(uploadDir);
-        if(!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+        if(mainMultipartFile.getSize() > 0) {
+            FileUploadUtil.saveFile(mainMultipartFile, uploadDir, mainImageName);
         }
 
-        try {
-            InputStream inputStream = multipartFile.getInputStream();
-            Path filePath = uploadPath.resolve(fileName);   // resolve = get file path
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new IOException("Could not save uploaded file " + fileName);
+        for(MultipartFile extraMultipartFile : extraMultipartFiles) {
+            if(extraMultipartFile.getSize() > 0) {
+                String extraImageName = StringUtils.cleanPath(extraMultipartFile.getOriginalFilename());
+                FileUploadUtil.saveFile(extraMultipartFile, uploadDir, extraImageName);
+            }
         }
-
         return "redirect:/";
     }
 

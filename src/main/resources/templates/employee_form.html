@@ -8,15 +8,55 @@
         <h2>Employee Form</h2>
         <form action="#" th:action="@{/saveEmloyee}" th:object="${employee}" method="POST" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
-            <input type="text" th:field="*{firstName}" placeholder="Enter First Name" class="form-control mb-4 col-4">
-            <input type="text" th:field="*{lastName}" placeholder="Enter Last Name" class="form-control mb-4 col-4">
-            <input type="text" th:field="*{email}" placeholder="Enter Email" class="form-control mb-4 col-4">
-            <p>
-                <label>Employee Image: </label>
-                <input type="file" name="imageFile" id="imageFile" accept="image/jpeg, image/png">
-                <br/>
-                <img src="" id="thumbnail" width="150" alt="Image Preview" />
-            </p>
+            <input type="text" th:field="*{firstName}" placeholder="Enter First Name" class="form-control my-4 col-4">
+            <input type="text" th:field="*{lastName}" placeholder="Enter Last Name" class="form-control my-4 col-4">
+            <input type="text" th:field="*{email}" placeholder="Enter Email" class="form-control my-4 col-4">
+            <div class="row">
+                <div class="col-md-4 border m-3">
+                    <p>
+                        <label>Main Image: </label>
+                    </p>
+                    <p>
+                        <input type="file" th:value="@{*{mainImagePath}}" name="primaryImage" id="primaryImage" accept="image/jpeg, image/png">
+                    </p>
+                    <p>
+                        <img th:src="@{*{mainImagePath}}" id="mainThumbnail" width="250" alt="Image Preview" />
+                    </p>
+                </div>
+                <div class="col-md-4 border m-3">
+                    <p>
+                        <label>Extra Image 1: </label>
+                    </p>
+                    <p>
+                        <input type="file" name="extraImage" accept="image/jpeg, image/png">
+                    </p>
+                    <p>
+                        <img th:src="@{*{extraImagePath1}}" id="thumbnail0" width="250" alt="Image Preview" />
+                    </p>
+                </div>
+                <div class="col-md-4 border m-3">
+                    <p>
+                        <label>Extra Image 2: </label>
+                    </p>
+                    <p>
+                        <input type="file" name="extraImage" accept="image/jpeg, image/png">
+                    </p>
+                    <p>
+                        <img th:src="@{*{extraImagePath2}}" id="thumbnail1" width="250" alt="Image Preview" />
+                    </p>
+                </div>
+                <div class="col-md-4 border m-3">
+                    <p>
+                        <label>Extra Image 3: </label>
+                    </p>
+                    <p>
+                        <input type="file" name="extraImage" accept="image/jpeg, image/png">
+                    </p>
+                    <p>
+                        <img th:src="@{*{extraImagePath3}}" id="thumbnail2" width="250" alt="Image Preview" />
+                    </p>
+                </div>
+            </div>
             <input type="submit" class="btn btn-info col-2" value="Save">
         </form>
 
