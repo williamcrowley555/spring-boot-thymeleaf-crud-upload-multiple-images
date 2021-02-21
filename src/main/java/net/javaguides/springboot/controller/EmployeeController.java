@@ -42,21 +42,36 @@ public class EmployeeController {
     public String saveEmloyee(@ModelAttribute("employee") Employee employee,
                               @RequestParam("primaryImage") MultipartFile mainMultipartFile,
                               @RequestParam("extraImage") MultipartFile[] extraMultipartFiles) throws IOException {
-        String mainImageName = StringUtils.cleanPath(mainMultipartFile.getOriginalFilename());
-        employee.setMainImage(mainImageName.isEmpty() ? null : mainImageName);
+        String oldImage = employee.getId() != null ?
+                employeeService.getEmployeeById(employee.getId()).getMainImage()
+                : null;
+        String mainImageName = FileUploadUtil.renderImage(employee, oldImage, mainMultipartFile);
+        employee.setMainImage(mainImageName);
 
         int i = 0;
         for(MultipartFile extraMultipartFile : extraMultipartFiles) {
-            String extraImageName = StringUtils.cleanPath(extraMultipartFile.getOriginalFilename());
+            String extraImageName;
             switch (i) {
                 case 0:
-                    employee.setExtraImage1(extraImageName.isEmpty() ? null : extraImageName);
+                    oldImage = employee.getId() != null ?
+                            employeeService.getEmployeeById(employee.getId()).getExtraImage1()
+                            : null;
+                    extraImageName = FileUploadUtil.renderImage(employee, oldImage, extraMultipartFile);
+                    employee.setExtraImage1(extraImageName);
                     break;
                 case 1:
-                    employee.setExtraImage2(extraImageName.isEmpty() ? null : extraImageName);
+                    oldImage = employee.getId() != null ?
+                            employeeService.getEmployeeById(employee.getId()).getExtraImage2()
+                            : null;
+                    extraImageName = FileUploadUtil.renderImage(employee, oldImage, extraMultipartFile);
+                    employee.setExtraImage2(extraImageName);
                     break;
                 case 2:
-                    employee.setExtraImage3(extraImageName.isEmpty() ? null : extraImageName);
+                    oldImage = employee.getId() != null ?
+                            employeeService.getEmployeeById(employee.getId()).getExtraImage3()
+                            : null;
+                    extraImageName = FileUploadUtil.renderImage(employee, oldImage, extraMultipartFile);
+                    employee.setExtraImage3(extraImageName);
                     break;
                 default:
                     break;
