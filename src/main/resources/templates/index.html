@@ -56,42 +56,65 @@
             </tbody>
         </table>
 
-        <div th:if="${totalPages > 1}">
-            <div class="row col-sm-12">
+        <th:block th:if="${totalPages > 1}" th:with="pageUrlPrefix = '/page/',
+                                                pageUrlPostFix = '?sortField=' + ${sortField} +
+                                                                '&sortDir=' + ${sortDir} +
+                                                                ${keyword != null ? '&keyword=' + keyword : ''}">
+            <p class="text-center">
+                Showing employees #1 to 5 of [[${totalItems}]]
+            </p>
+            <nav class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a th:href="@{|${pageUrlPrefix + 1 + pageUrlPostFix}|}" class="page-link">First</a>
+                    </li>
 
-                <div class="col-sm-2">
-                    Total Rows: [[${totalItems}]]
-                </div>
+                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a th:href="@{|${pageUrlPrefix + (currentPage - 1) + pageUrlPostFix}|}" class="page-link">Previous</a>
+                    </li>
 
-                <div class="col-sm-1">
-                    <a th:if="${currentPage > 1}" th:href="@{|/page/1?sortField=${sortField}&sortDir=${sortDir}${keyword != null ? '&keyword=' + keyword : ''}|}">First</a>
-                    <span th:unless="${currentPage > 1}">First</span>
-                </div>
+                    <th:block th:unless="${totalPages > 6}">
+                        <li th:each="i : ${#numbers.sequence(1, 5)}" th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+                            <a th:href="@{|${pageUrlPrefix + i + pageUrlPostFix}|}" class="page-link">[[${i}]]</a>
+                        </li>
+                    </th:block>
 
-                <div class="col-sm-1">
-                    <a th:if="${currentPage > 1}" th:href="@{|/page/${currentPage - 1}?sortField=${sortField}&sortDir=${sortDir}${keyword != null ? '&keyword=' + keyword : ''}|}">Previous</a>
-                    <span th:unless="${currentPage > 1}">Previous</span>
-                </div>
+                    <th:block th:if="${totalPages > 6}">
+                        <th:block th:if="${currentPage <= 3 || currentPage >= totalPages - 2}">
+                            <li th:each="i : ${#numbers.sequence(1, 3)}" th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+                                <a th:href="@{|${pageUrlPrefix + i + pageUrlPostFix}|}" class="page-link">[[${i}]]</a>
+                            </li>
+                            <li class="page-item">
+                                <a th:href="@{|${pageUrlPrefix + 4 + pageUrlPostFix}|}" class="page-link">...</a>
+                            </li>
+                            <li th:each="i : ${#numbers.sequence(totalPages - 2, totalPages)}" th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+                                <a th:href="@{|${pageUrlPrefix + i + pageUrlPostFix}|}" class="page-link">[[${i}]]</a>
+                            </li>
+                        </th:block>
 
-                <div class="col-sm-2">
-                    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-                        <a th:if="${currentPage != i}" th:href="@{|/page/${i}?sortField=${sortField}&sortDir=${sortDir}${keyword != null ? '&keyword=' + keyword : ''}|}">[[${i}]]</a>
-                        <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-                    </span>
-                </div>
+                        <th:block th:if="${currentPage > 3 && currentPage < totalPages - 2}">
+                            <li class="page-item">
+                                <a th:href="@{|${pageUrlPrefix + (currentPage - 3) + pageUrlPostFix}|}" class="page-link">...</a>
+                            </li>
+                            <li th:each="i : ${#numbers.sequence(currentPage - 2, currentPage + 2)}" th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+                                <a th:href="@{|${pageUrlPrefix + i + pageUrlPostFix}|}" class="page-link">[[${i}]]</a>
+                            </li>
+                            <li class="page-item">
+                                <a th:href="@{|${pageUrlPrefix + (currentPage + 3) + pageUrlPostFix}|}" class="page-link">...</a>
+                            </li>
+                        </th:block>
+                    </th:block>
 
-                <div class="col-sm-1">
-                    <a th:if="${currentPage < totalPages}" th:href="@{|/page/${currentPage + 1}?sortField=${sortField}&sortDir=${sortDir}${keyword != null ? '&keyword=' + keyword : ''}|}">Next</a>
-                    <span th:unless="${currentPage < totalPages}">Next</span>
-                </div>
+                    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                        <a th:href="@{|${pageUrlPrefix + (currentPage + 1) + pageUrlPostFix}|}" class="page-link">Next</a>
+                    </li>
 
-                <div class="col-sm-1">
-                    <a th:if="${currentPage < totalPages}" th:href="@{|/page/${totalPages}?sortField=${sortField}&sortDir=${sortDir}${keyword != null ? '&keyword=' + keyword : ''}|}">Last</a>
-                    <span th:unless="${currentPage < totalPages}">Last</span>
-                </div>
-
-            </div>
-        </div>
+                    <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                        <a th:href="@{|${pageUrlPrefix + (totalPages) + pageUrlPostFix}|}" class="page-link">Last</a>
+                    </li>
+                </ul>
+            </nav>
+        </th:block>
     </div>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package net.javaguides.springboot.util;
 
 import net.javaguides.springboot.model.Employee;
-import net.javaguides.springboot.service.impl.EmployeeService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
