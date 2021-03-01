@@ -74,7 +74,7 @@
                     </li>
 
                     <th:block th:unless="${totalPages > 6}">
-                        <li th:each="i : ${#numbers.sequence(1, 5)}" th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
+                        <li th:each="i : ${#numbers.sequence(1, 6)}" th:class="${currentPage != i ? 'page-item' : 'page-item active'}">
                             <a th:href="@{|${pageUrlPrefix + i + pageUrlPostFix}|}" class="page-link">[[${i}]]</a>
                         </li>
                     </th:block>
